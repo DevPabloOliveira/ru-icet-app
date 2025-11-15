@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Cardápio RU ICET</title>
+
+    <link rel="stylesheet" href="admin.css">
+
+    <script src="admin.js" defer></script>
+</head>
+<body>
+
+    <div id="login-container">
+        <form id="login-form" class="login-form">
+            <h1>Login - Painel Admin</h1>
+            <div class="form-group">
+                <label for="username">Usuário</label>
+                <input type="text" id="username" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" class="form-control" required>
+            </div>
+            <button type="submit" class="button">Entrar</button>
+            <p id="login-error" class="form-message error"></p>
+        </form>
+    </div>
+
+    <main id="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Painel de Administração - RU ICET</h1>
+            <button id="logout-btn">Sair</button>
+        </header>
+
+        <nav class="dashboard-nav">
+            <button class="tab-button active" data-tab="menu-manager">Gerenciar Cardápio</button>
+            <button class="tab-button" data-tab="comments-moderator">Moderar Comentários</button>
+        </nav>
+
+        <div class="dashboard-content">
+
+            <section id="menu-manager" class="tab-panel active">
+                <form id="menu-form">
+                    <h2>Cadastrar / Editar Cardápio do Dia</h2>
+                    
+                    <div class="date-selector">
+                        <label for="menu-date">Selecione o Dia:</label>
+                        <input type="date" id="menu-date" required>
+                        <button type="button" id="load-menu-btn" class="button" style="width: auto; background-color: var(--ufam-green-light); margin-left: 10px;">Carregar Dados</button>
+                    </div>
+                    <p id="menu-form-message" class="form-message"></p>
+
+                    <fieldset class="meal-fieldset">
+                        <legend>☕ Desjejum</legend>
+                        <div class="form-group">
+                            <label for="desjejum-Bebida">Bebida</label>
+                            <textarea id="desjejum-Bebida" data-meal="desjejum" data-field="Bebida" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="desjejum-Acompanhamento">Acompanhamento</label>
+                            <textarea id="desjejum-Acompanhamento" data-meal="desjejum" data-field="Acompanhamento" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="desjejum-Guarnição">Guarnição</label>
+                            <textarea id="desjejum-Guarnição" data-meal="desjejum" data-field="Guarnição" class="form-control"></textarea>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="meal-fieldset">
+                        <legend>🍛 Almoço</legend>
+                        <div class="form-group">
+                            <label for="almoco-Salada">Salada</label>
+                            <textarea id="almoco-Salada" data-meal="almoco" data-field="Salada" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="almoco-1ª Opção">1ª Opção</label>
+                            <textarea id="almoco-1ª Opção" data-meal="almoco" data-field="1ª Opção" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="almoco-2ª Opção">2ª Opção</label>
+                            <textarea id="almoco-2ª Opção" data-meal="almoco" data-field="2ª Opção" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="almoco-Vegetariana">Vegetariana</label>
+                            <textarea id="almoco-Vegetariana" data-meal="almoco" data-field="Vegetariana" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="almoco-Acompanhamento">Acompanhamento</label>
+                            <textarea id="almoco-Acompanhamento" data-meal="almoco" data-field="Acompanhamento" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="almoco-Guarnição">Guarnição</label>
+                            <textarea id="almoco-Guarnição" data-meal="almoco" data-field="Guarnição" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="almoco-Sobremesa / Suco">Sobremesa / Suco</label>
+                            <textarea id="almoco-Sobremesa / Suco" data-meal="almoco" data-field="Sobremesa / Suco" class="form-control"></textarea>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="meal-fieldset">
+                        <legend>🌙 Janta</legend>
+                        <div class="form-group">
+                            <label for="janta-Salada">Salada</label>
+                            <textarea id="janta-Salada" data-meal="janta" data-field="Salada" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="janta-1ª Opção">1ª Opção</label>
+                            <textarea id="janta-1ª Opção" data-meal="janta" data-field="1ª Opção" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="janta-2ª Opção">2ª Opção</label>
+                            <textarea id="janta-2ª Opção" data-meal="janta" data-field="2ª Opção" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="janta-Vegetariana">Vegetariana</label>
+                            <textarea id="janta-Vegetariana" data-meal="janta" data-field="Vegetariana" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="janta-Acompanhamento">Acompanhamento</label>
+                            <textarea id="janta-Acompanhamento" data-meal="janta" data-field="Acompanhamento" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="janta-Guarnição">Guarnição</label>
+                            <textarea id="janta-Guarnição" data-meal="janta" data-field="Guarnição" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="janta-Sopa / Canja">Sopa / Canja</label>
+                            <textarea id="janta-Sopa / Canja" data-meal="janta" data-field="Sopa / Canja" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="janta-Sobremesa / Suco">Sobremesa / Suco</label>
+                            <textarea id="janta-Sobremesa / Suco" data-meal="janta" data-field="Sobremesa / Suco" class="form-control"></textarea>
+                        </div>
+                    </fieldset>
+
+                    <button type="submit" class="button">Salvar Cardápio</button>
+                </form>
+            </section>
+
+            <section id="comments-moderator" class="tab-panel">
+                <div id="comments-moderator-content">
+                    <h2>Moderar Comentários</h2>
+                    <div class="date-selector">
+                        <label for="comment-date">Selecione o Dia:</label>
+                        <input type="date" id="comment-date">
+                        <button id="load-comments-btn" class="button" style="width: auto; background-color: var(--ufam-green-light); margin-left: 10px;">Carregar Comentários</button>
+                    </div>
+
+                    <div id="comments-list-admin">
+                        </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+</body>
+</html>

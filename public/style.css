@@ -1,0 +1,682 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --ufam-green: #004d2b;
+    --ufam-green-light: #006b3d;
+    --ufam-text: #333;
+    --background-color: #f4f7f6;
+    --card-background: #ffffff;
+    --border-color: #e0e0e0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background-color);
+    color: var(--ufam-text);
+    line-height: 1.6;
+    font-size: 16px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.header-ufam {
+    background-color: var(--ufam-green);
+    color: white;
+    padding: 1rem;
+    border-bottom: 5px solid var(--ufam-green-light);
+}
+
+.header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo-area {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.logo-area img {
+    height: 35px;
+    filter: brightness(0) invert(1);
+}
+
+.title-area {
+    text-align: center;
+}
+
+.title-area h1 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.title-area p {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.content-card {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    padding: 1rem;
+}
+
+.sidebar .content-card:last-child {
+     margin-bottom: 0;
+}
+
+.section-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ufam-text);
+    margin-bottom: 0.5rem;
+    border-left: 4px solid var(--ufam-green);
+    padding-left: 0.75rem;
+}
+
+.subtitle {
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 1rem;
+}
+
+.loading-text {
+    color: #777;
+    font-style: italic;
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.tabs-container {
+    display: flex;
+    border-bottom: 2px solid var(--border-color);
+    margin: -1rem -1rem 1rem -1rem;
+    padding: 0 0.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.tabs-container::-webkit-scrollbar {
+    display: none;
+}
+
+.tab-button {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #555;
+    background-color: transparent;
+    border: none;
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.tab-button:hover {
+    background-color: #f9f9f9;
+}
+
+.tab-button.active {
+    color: var(--ufam-green);
+    border-bottom-color: var(--ufam-green);
+}
+
+.menu-section {
+    margin-bottom: 1.5rem;
+}
+
+.menu-section h4 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--ufam-green-light);
+    margin-bottom: 0.75rem;
+}
+
+.menu-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.menu-table th, .menu-table td {
+    text-align: left;
+    padding: 0.6rem 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: top;
+}
+
+.menu-table th {
+    background-color: #f7f9f8;
+    color: var(--ufam-green);
+    font-weight: 600;
+    width: auto;
+    padding-right: 0.5rem;
+}
+
+.menu-table td {
+    word-break: break-word;
+}
+
+.actions-container {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.actions-container h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ufam-text);
+    margin-bottom: 0.75rem;
+}
+
+.button {
+    font-family: 'Inter', sans-serif;
+    padding: 0.7rem 1.1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.button-primary {
+    background-color: var(--ufam-green);
+    color: white;
+}
+
+.button-primary:hover {
+    background-color: var(--ufam-green-light);
+}
+
+.like-buttons {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.like-btn {
+    background-color: #f0f0f0;
+    color: #555;
+    font-size: 1rem;
+    padding: 0.7rem 1.1rem;
+    border-radius: 8px;
+}
+
+.like-btn:hover:not(:disabled) {
+    background-color: #e0e0e0;
+}
+
+.like-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #eee;
+}
+
+.like-btn.like {
+    background-color: #e6f7eb;
+    color: #1d944f;
+}
+
+.like-btn.like:hover:not(:disabled) {
+    background-color: #d1f0db;
+}
+
+.like-btn.dislike {
+    background-color: #fde8e8;
+    color: #d93030;
+}
+
+.like-btn.dislike:hover:not(:disabled) {
+    background-color: #fbd6d6;
+}
+
+.like-btn span {
+    font-weight: 700;
+    margin-left: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.vote-message {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 0.75rem;
+}
+
+#comment-message {
+    margin-top: 0.5rem;
+}
+
+.ranking-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.ranking-list li {
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.6rem 0;
+    border-bottom: 1px dashed var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.ranking-list li:first-child {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #D4AF37;
+}
+
+.ranking-list li:nth-child(2) {
+    color: #888;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.ranking-list li:nth-child(3) {
+    color: #a97142;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.ranking-list .rank-votes {
+    font-weight: 700;
+    color: var(--ufam-green);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.ranking-list li span:first-child {
+     word-break: break-word;
+}
+
+.comments-list {
+    max-height: 250px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.comment-item {
+    background-color: #f9f9f9;
+    padding: 0.7rem 0.9rem;
+    border-radius: 8px;
+    margin-bottom: 0.6rem;
+    border: 1px solid var(--border-color);
+}
+
+.comment-item strong {
+    color: var(--ufam-green-light);
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.comment-item p {
+    font-size: 0.85rem;
+    word-break: break-word;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.comment-form label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: -0.15rem;
+}
+
+.comment-form input,
+.comment-form textarea {
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.comment-form textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.footer-ufam {
+    background-color: var(--ufam-green);
+    color: #e0e0e0;
+    padding: 1.5rem 1rem;
+    margin-top: 1.5rem;
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    text-align: center;
+}
+
+.footer-nutricionist {
+     border-top: 1px solid rgba(255, 255, 255, 0.2);
+     padding-top: 1rem;
+     width: 100%;
+     max-width: 300px;
+}
+
+.like-btn.voted {
+    box-shadow: 0 0 0 2px var(--ufam-green-light);
+    opacity: 1;
+}
+
+.like-btn.dislike.voted {
+    box-shadow: 0 0 0 2px #d93030;
+}
+
+.like-btn.voted:hover {
+    opacity: 0.9;
+}
+
+/* Telas maiores */
+@media (min-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+
+    .container {
+        padding: 1.5rem;
+        grid-template-columns: 2fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .content-card {
+        padding: 1.5rem;
+    }
+
+     .sidebar .content-card:last-child {
+         margin-bottom: 1.5rem;
+     }
+
+     .sidebar .content-card:last-of-type {
+        margin-bottom: 0;
+     }
+
+    .header-container {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem;
+    }
+
+    .logo-area img {
+        height: 40px;
+    }
+
+    .title-area h1 {
+        font-size: 1.75rem;
+    }
+
+    .title-area p {
+        font-size: 0.9rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+    }
+
+    .tabs-container {
+         margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+         padding: 0 1.5rem;
+    }
+
+    .tab-button {
+        font-size: 1rem;
+        padding: 1rem 1.25rem;
+        border-bottom-width: 4px;
+    }
+
+    .menu-section h4 {
+        font-size: 1.25rem;
+    }
+
+    .menu-table {
+        font-size: 0.95rem;
+    }
+
+    .menu-table th, .menu-table td {
+        padding: 0.75rem;
+    }
+
+    .menu-table th {
+        width: 150px;
+        font-weight: 700;
+        padding-right: 0.75rem;
+    }
+
+    .actions-container h4 {
+        font-size: 1.1rem;
+    }
+
+    .button {
+        padding: 0.75rem 1.25rem;
+    }
+
+    .like-btn {
+        font-size: 1.1rem;
+        padding: 0.75rem 1.25rem;
+    }
+
+    .like-btn span {
+        font-size: 1rem;
+    }
+
+    .vote-message {
+        font-size: 0.9rem;
+    }
+
+     .ranking-list li {
+        font-size: 1rem;
+        padding: 0.75rem;
+    }
+
+     .ranking-list li:first-child {
+        font-size: 1.1rem;
+    }
+
+    .ranking-list li:nth-child(2), .ranking-list li:nth-child(3) {
+        font-size: 1rem;
+        color: #777;
+    }
+
+    .comments-list {
+        max-height: 300px;
+    }
+
+    .comment-item strong {
+       font-size: 1rem;
+    }
+
+    .comment-item p {
+        font-size: 0.9rem;
+    }
+
+     .comment-form label {
+        font-size: 0.9rem;
+    }
+
+     .comment-form input,
+    .comment-form textarea {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .footer-ufam {
+        flex-direction: row;
+        justify-content: space-around;
+        text-align: left;
+        padding: 2rem 1rem;
+        margin-top: 2rem;
+        font-size: 0.9rem;
+        gap: 1.5rem;
+    }
+
+     .footer-nutricionist {
+         border-top: none;
+         padding-top: 0;
+         width: auto;
+         max-width: none;
+         text-align: right;
+     }
+
+     .like-btn.voted {
+        box-shadow: 0 0 0 3px var(--ufam-green-light);
+    }
+
+    .like-btn.dislike.voted {
+        box-shadow: 0 0 0 3px #d93030;
+    }
+}
+
+#ranking-chart-container {
+    width: 100%;
+    margin-top: 1rem;
+    height: 250px;
+}
+
+@media (min-width: 768px) {
+    #ranking-chart-container {
+        height: 300px;
+    }
+}
+
+.protein-vote-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.protein-vote-btn {
+    background: #f0f0f0;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.protein-vote-btn:hover:not(:disabled) {
+    background: #e0e0e0;
+}
+
+.protein-vote-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.protein-vote-btn.like.voted {
+     background-color: #e6f7eb;
+     color: #1d944f;
+     box-shadow: 0 0 0 2px #1d944f;
+}
+
+.protein-vote-btn.dislike.voted {
+     background-color: #fde8e8;
+     color: #d93030;
+     box-shadow: 0 0 0 2px #d93030;
+}
+
+.protein-vote-counts {
+    font-size: 0.75rem;
+    color: #666;
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.protein-vote-counts span {
+     font-weight: 600;
+}
+
+.protein-vote-counts .likes-count { color: var(--ufam-green); }
+.protein-vote-counts .dislikes-count { color: #d93030; }
+
+#daily-protein-ranking .ranking-list li {
+    font-size: 0.9rem;
+    padding: 0.4rem 0;
+    border-bottom: none;
+}
+
+#daily-protein-ranking .ranking-list li span:first-child{
+     font-weight: 600;
+}
+
+#daily-protein-ranking .rank-votes {
+     font-size: 0.8rem;
+}
+
+#daily-protein-ranking .meal-indicator {
+     font-size: 0.75rem;
+     color: #777;
+     margin-left: 0.25rem;
+}
+
+@media (min-width: 768px) {
+    .protein-vote-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+    }
+
+    .protein-vote-counts {
+        font-size: 0.8rem;
+    }
+
+    #daily-protein-ranking .section-title { font-size: 1.25rem; }
+    #daily-protein-ranking .ranking-list li { font-size: 1rem; }
+    #daily-protein-ranking .rank-votes { font-size: 0.9rem; }
+}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SABORES DA SI - RU Itacoatiara</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+<header class="header-ufam">
+    <div class="container header-container">
+        <div class="title-area">
+            <h1>🍽 SABORES DA SI</h1>
+            <p>Unidade: UFAM Itacoatiara | Semana Atual - Outubro/2025</p>
+        </div>
+    </div>
+</header>
+
+    <main class="container">
+
+        <div class="content-card">
+            <nav class="tabs-container" id="day-tabs">
+                </nav>
+
+            <div id="menu-content" class="menu-content-area">
+                <p class="loading-text">Carregando cardápio...</p>
+                </div>
+
+             <div id="daily-protein-ranking" class="content-card daily-ranking-container" style="display: none; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                <h4 class="section-title" style="font-size: 1.1rem; border-left: none; padding-left: 0;">⭐ Melhor(es) Proteína(s) do Dia</h4>
+                <div id="daily-protein-ranking-list" class="ranking-list" style="padding-left: 0.5rem;">
+                    {/* Ranking diário será inserido aqui pelo script.js */}
+                    <p class="loading-text" style="font-size: 0.85rem;">Ainda sem votos suficientes.</p>
+                </div>
+            </div>
+
+            <div class="content-card" style="margin-top: 1.5rem;"> 
+                <h3 class="section-title">💬 Comentários do Dia</h3>
+                <div id="comments-list" class="comments-list">
+                    </div>
+                <form id="comment-form" class="comment-form">
+                    <label for="comment-author">Seu nome:</label>
+                    <input type="text" id="comment-author" placeholder="Ex: Ana S." required>
+                    <label for="comment-text">Seu comentário:</label>
+                    <textarea id="comment-text" rows="3" placeholder="O que você achou do cardápio de hoje?" required></textarea>
+                    <button type="submit" class="button button-primary">Enviar</button>
+                    <p id="comment-message" class="vote-message"></p>
+                </form>
+            </div>
+
+        </div>
+
+        <aside class="sidebar">
+            <div class="content-card">
+                <h3 class="section-title">🏆 Ranking da Semana</h3>
+                <p class="subtitle">Os cardápios (baseado no prato principal) mais curtidos:</p>
+                <div id="ranking-chart-container" style="position: relative; height: 250px;">
+                     <canvas id="ranking-chart"></canvas>
+                     <p id="ranking-loading" class="loading-text">Carregando ranking...</p>
+                </div>
+            </div>
+
+        </aside>
+
+    </main>
+
+    <footer class="footer-ufam">
+        <div class="footer-content">
+            <p>&copy; 2025 Universidade Federal do Amazonas - UFAM</p>
+            <p>Instituto de Ciências Exatas e Tecnologia - ICET</p>
+        </div>
+        <div class="footer-nutricionist">
+            <p><strong>Responsável Técnica:</strong></p>
+            <p>Nutricionista: Andreza Bruce</p>
+            <p>CRN: 16901</p>
+        </div>
+    </footer>
+
+</body>
+</html>
