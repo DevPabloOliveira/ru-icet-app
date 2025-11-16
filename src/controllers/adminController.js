@@ -2,7 +2,14 @@ const pool = require('../config/db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'seu_segredo_super_secreto_para_jwt';
+// Carrega o segredo das variáveis de ambiente
+const JWT_SECRET = process.env.JWT_SECRET;
+
+// VERIFICAÇÃO DE SEGURANÇA:
+// Se o segredo não estiver definido, o app não deve rodar.
+if (!JWT_SECRET) {
+    throw new Error('FATAL_ERROR: JWT_SECRET não está definido nas variáveis de ambiente.');
+}
 
 /**
  * Faz login do admin
@@ -103,7 +110,7 @@ exports.getComentariosAdmin = async (req, res) => {
 exports.moderarComentario = async (req, res) => {
     try {
         const { id } = req.params;
-        const { visivel } = req.body; 
+        const { visivel } = req.body; // Deve ser true ou false
 
         if (visivel === undefined) {
             return res.status(400).json({ message: 'Status de visibilidade não fornecido.' });
