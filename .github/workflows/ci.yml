@@ -38,7 +38,7 @@ jobs:
 
       # 3. Instala as dependências
       - name: Instalar dependências
-        run: npm install
+        run: npm ci
 
       # 4. Roda o comando de teste (que definimos no package.json)
       - name: Rodar testes
