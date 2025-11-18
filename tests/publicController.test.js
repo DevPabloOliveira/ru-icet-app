@@ -1,3 +1,5 @@
+jest.mock('../src/config/db');
+
 // 1. Importa a função específica que queremos testar
 const { getDbTodayDate } = require('../src/controllers/publicController');
 
