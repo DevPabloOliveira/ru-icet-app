@@ -1,0 +1,45 @@
+name: CI de Testes do Node.js
+
+# Gatilhos: Quando este workflow deve rodar?
+on:
+  # Rodar em pushes para as branches principais
+  push:
+    branches:
+      - main
+      - development
+  # Rodar em Pull Requests que mirem as branches principais
+  pull_request:
+    branches:
+      - main
+      - development
+
+jobs:
+  # Nome do "trabalho" que vamos executar
+  test:
+    # Rodar no sistema operacional mais recente do Ubuntu
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        # Definir as versões do Node.js que queremos testar
+        node-version: [18.x, 20.x] 
+
+    steps:
+      # 1. Baixa o código do seu repositório para a máquina do GitHub
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # 2. Configura a versão do Node.js
+      - name: Usar Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm' # Ativa o cache do npm para velocidade
+
+      # 3. Instala as dependências
+      - name: Instalar dependências
+        run: npm ci
+
+      # 4. Roda o comando de teste (que definimos no package.json)
+      - name: Rodar testes
+        run: npm test
