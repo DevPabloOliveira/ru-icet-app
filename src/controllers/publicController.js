@@ -441,3 +441,16 @@ exports.postVoto = async (req, res) => {
         }
     }
 };
+
+// ==================================================================
+//  MODIFICAÇÃO PARA TESTES (JEST)
+//  Exporta as funções de rota e também as helpers para o Jest
+// ==================================================================
+module.exports = {
+    ...exports, // Mantém todas as exportações de rota (getDadosSemana, postVoto, etc.)
+    
+    // Exporta as funções helper para que possam ser testadas
+    getDbTodayDate,
+    formatDate,
+    formatDateSimple
+};
