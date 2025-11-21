@@ -8,7 +8,7 @@ const adminRoutes = require('./api/adminRoutes');
 
 const app = express();
 
-// Configurações básicas do Express 
+// Configurações básicas do Express OK
 app.use(cors());
 app.use(express.json());
 
