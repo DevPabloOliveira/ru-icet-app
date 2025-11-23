@@ -24,3 +24,5 @@ describe('Testes para Funções Auxiliares (Helpers) do publicController', () =>
     // exemplo : test('outroTeste deve fazer outra coisa', () => { ... });
 
 });
+
+// Feito por Wilian Tavares, confia
