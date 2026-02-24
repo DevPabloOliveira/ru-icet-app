@@ -8,6 +8,9 @@ const adminRoutes = require('./api/adminRoutes');
 
 const app = express();
 
+//RATE LIMIT
+app.set('trust proxy', 1);
+
 // Configurações básicas do Express
 app.use(cors());
 app.use(express.json());
