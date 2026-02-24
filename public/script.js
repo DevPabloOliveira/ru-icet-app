@@ -219,29 +219,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /**
-     * Renderiza a lista de comentários
+     * Renderiza a lista de comentários de forma segura (Prevenção de XSS)
      */
     function renderComments(comments) {
         if (!commentsListEl) return; 
 
         commentsListEl.innerHTML = '';
+        
         if (!comments || comments.length === 0) {
             commentsListEl.innerHTML = '<p class="subtitle">Seja o primeiro a comentar!</p>';
             return;
         }
+
         comments.forEach(comment => {
+            // Container do comentário
             const commentEl = document.createElement('div');
             commentEl.className = 'comment-item';
-            // Sanitiza minimamente para evitar XSS simples (idealmente usar biblioteca)
-            const safeAutor = comment.autor ? comment.autor.replace(/</g, "&lt;").replace(/>/g, "&gt;") : 'Anônimo';
-            const safeTexto = comment.texto ? comment.texto.replace(/</g, "&lt;").replace(/>/g, "&gt;") : '';
-            commentEl.innerHTML = `<strong>${safeAutor}</strong><p>${safeTexto}</p>`;
+            
+            // tag <strong> para o autor de forma segura
+            const autorEl = document.createElement('strong');
+            autorEl.textContent = comment.autor || 'Anônimo';
+            
+            // Cria a tag <p> para o texto do comentário de forma segura
+            const textoEl = document.createElement('p');
+            textoEl.textContent = comment.texto || '';
+            
+            // Estrutura no DOM
+            commentEl.appendChild(autorEl);
+            commentEl.appendChild(textoEl);
+
             commentsListEl.appendChild(commentEl);
         });
     }
 
- /**
-     * MODIFICADO: Renderiza o Ranking Semanal de PROTEÍNAS como gráfico de barras
+    /**
+     * Renderiza o Ranking Semanal de PROTEÍNAS como gráfico de barras
      */
     function renderRanking(rankingProteinData) { 
         // Seletores
@@ -270,12 +282,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Os dados já vêm ordenados da API, mas podemos garantir
+        // Os dados ordenados da API
         rankingProteinData.sort((a, b) => b.total_likes - a.total_likes);
 
-        // Prepara dados para o Chart.js
         const labels = rankingProteinData.map(item =>
-            // Encurta nomes longos
             item.name.substring(0, 25) + (item.name.length > 25 ? '...' : '')
         );
         const dataValues = rankingProteinData.map(item => item.total_likes);
@@ -296,7 +306,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     datasets: [{
                         label: 'Total de Votos 👍 na Semana', 
                         data: dataValues,
-                        // Reutiliza cores (pode precisar de mais se o ranking for > 5)
                         backgroundColor: [
                              'rgba(212, 175, 55, 0.7)', 'rgba(192, 192, 192, 0.7)', 'rgba(205, 127, 50, 0.7)',
                              'rgba(0, 107, 61, 0.7)', 'rgba(0, 77, 43, 0.7)'
@@ -309,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         barThickness: 'flex', maxBarThickness: 15, borderRadius: 3,
                     }]
                 },
-                options: { // Mesmas opções de estilo de antes
+                options: { 
                     responsive: true, maintainAspectRatio: false, indexAxis: 'y',
                     scales: {
                         x: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 10 } }, grid: { display: false } },
@@ -321,7 +330,6 @@ document.addEventListener('DOMContentLoaded', () => {
                              backgroundColor: 'rgba(0, 0, 0, 0.7)', titleFont: { weight: 'bold' }, bodyFont: {},
                              padding: 10, cornerRadius: 4,
                              callbacks: {
-                                  // Tooltip mostra o nome completo (não encurtado) e os votos totais
                                   title: function(tooltipItems) {
                                        const index = tooltipItems[0].dataIndex;
                                        return rankingProteinData[index].name; 
@@ -329,7 +337,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                   label: function(context) {
                                        let label = context.dataset.label || '';
                                        if (label) { label += ': '; }
-                                       // Usa context.parsed.x que é o valor numérico da barra horizontal
                                        label += `${context.parsed.x} ${context.parsed.x === 1 ? 'voto' : 'votos'}`;
                                        return label;
                                   }
@@ -388,7 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  fetch(`${API_URL}/ranking`)
              ]);
 
-             // Tratamento de erro robusto
+             // Tratamento de erro 
              if (!menuResponse.ok) {
                  let errorMsg = `Falha ao carregar cardápios: ${menuResponse.status}`;
                  try { const errorData = await menuResponse.json(); errorMsg += ` - ${errorData.message || 'Erro desconhecido'}`; } catch (e) { errorMsg += ` ${menuResponse.statusText}`; }
@@ -437,7 +444,6 @@ document.addEventListener('DOMContentLoaded', () => {
                      activeDayKey = tabsContainer.firstChild.dataset.day; 
                  } else {
                       console.warn("[WARN] Não foi possível definir a aba ativa.");
-                      // Se não há abas, não tenta renderizar o dia
                       if(menuContentEl) menuContentEl.innerHTML = '<p class="loading-text">Nenhum dia disponível.</p>';
                       return; 
                  }
@@ -449,7 +455,6 @@ document.addEventListener('DOMContentLoaded', () => {
                  if(dailyRankingContainer) dailyRankingContainer.style.display = 'none';
                  if(commentsListEl) commentsListEl.innerHTML = '';
                  if(commentFormEl) commentFormEl.style.display = 'none';
-                 // Limpa também as abas se não houver dados
                  if(tabsContainer) tabsContainer.innerHTML = '';
              }
 
@@ -457,12 +462,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
          } catch (error) {
              console.error('[ERRO] Erro GERAL ao buscar dados iniciais:', error);
-             // Mostra erro no local do cardápio
              if(menuContentEl) menuContentEl.innerHTML = `<p class="loading-text" style="color: red;">${error.message || 'Erro ao carregar o sistema. Tente novamente mais tarde.'}</p>`;
-             // Mostra erro no ranking semanal
              if(rankingLoadingText) { rankingLoadingText.textContent = 'Erro ao carregar.'; rankingLoadingText.style.display = 'block'; }
              if(rankingChartCanvas) rankingChartCanvas.style.display = 'none';
-             // Esconde outras seções
              if(dailyRankingContainer) dailyRankingContainer.style.display = 'none';
              if(commentsListEl) commentsListEl.innerHTML = '';
              if(commentFormEl) commentFormEl.style.display = 'none';
