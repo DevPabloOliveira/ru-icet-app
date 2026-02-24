@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: ru_icet_app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - MYSQLHOST=db
+      - MYSQLUSER=root
+      - MYSQLPASSWORD=ru_secret_pass
+      - MYSQLDATABASE=ru_icet_db
+      - JWT_SECRET=sua_chave_secreta_super_segura_producao
+    depends_on:
+      - db
+    networks:
+      - ru_network
+
+  db:
+    image: mysql:8.0
+    container_name: ru_icet_db
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=ru_secret_pass
+      - MYSQL_DATABASE=ru_icet_db
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./setup.sql:/docker-entrypoint-initdb.d/setup.sql
+    networks:
+      - ru_network
+
+volumes:
+  mysql_data:
+
+networks:
+  ru_network:
+    driver: bridge
