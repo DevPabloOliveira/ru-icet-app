@@ -8,6 +8,7 @@ services:
     ports:
       - "3000:3000"
     environment:
+      - TZ=America/Manaus # AUD-04: Sincroniza o relógio do container com o Amazonas
       - MYSQLHOST=db
       - MYSQLUSER=root
       - MYSQLPASSWORD=ru_secret_pass
@@ -18,11 +19,13 @@ services:
     networks:
       - ru_network
 
+  # Serviço do Banco de Dados MySQL
   db:
     image: mysql:8.0
     container_name: ru_icet_db
     restart: always
     environment:
+      - TZ=America/Manaus # AUD-04: Sincroniza o relógio do banco com o Amazonas
       - MYSQL_ROOT_PASSWORD=ru_secret_pass
       - MYSQL_DATABASE=ru_icet_db
     volumes:
