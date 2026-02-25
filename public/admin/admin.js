@@ -64,11 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function checkLoginStatus() {
         if (authToken) {
-            // Tenta verificar se o token ainda é válido (opcional, mas bom)
-            // Por enquanto, apenas mostramos o painel
             loginContainer.style.display = 'none';
             dashboardContainer.style.display = 'block';
-            // Define a data de hoje nos seletores
             const today = new Date().toISOString().split('T')[0];
             menuDateInput.value = today;
             commentDateInput.value = today;
@@ -118,11 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Navegação por Abas
     function handleTabClick(e) {
-        // Remove 'active' de todos
         tabButtons.forEach(btn => btn.classList.remove('active'));
         tabPanels.forEach(panel => panel.classList.remove('active'));
 
-        // Adiciona 'active' ao clicado
         const tabId = e.target.dataset.tab;
         e.target.classList.add('active');
         document.getElementById(tabId).classList.add('active');
@@ -136,12 +131,10 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => menuFormMessage.textContent = '', 4000);
     }
 
-    // Limpa todos os campos <textarea> do formulário
     function clearMenuForm() {
         formTextareas.forEach(textarea => textarea.value = '');
     }
 
-    // Carrega dados de um cardápio existente
     async function loadMenuData() {
         const date = menuDateInput.value;
         if (!date) return;
@@ -150,7 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
         showFormMessage('Carregando dados...', 'loading');
 
         try {
-            // Usamos a rota PÚBLICA /api/cardapio/:data pois ela já retorna os dados formatados
             const response = await fetch(`/api/cardapio/${date}`);
             const data = await response.json();
             
@@ -159,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const { cardapio } = data;
-            // Preenche o formulário
             for (const meal of ['desjejum', 'almoco', 'janta']) {
                 if (cardapio[meal]) {
                     for (const [field, value] of Object.entries(cardapio[meal])) {
@@ -177,7 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Salva (cria ou atualiza) um cardápio
     async function handleMenuFormSubmit(e) {
         e.preventDefault();
         const data = menuDateInput.value;
@@ -188,7 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         showFormMessage('Salvando...', 'loading');
 
-        // Monta o objeto JSON a partir do formulário
         const cardapioPayload = {
             data: data,
             desjejum: {},
@@ -215,7 +204,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 4. LÓGICA DO MODERADOR DE COMENTÁRIOS ---
 
-    // Carrega os comentários para moderação
     async function loadCommentsForModeration() {
         const date = commentDateInput.value;
         if (!date) return;
@@ -229,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            commentsListAdmin.innerHTML = ''; // Limpa
+            commentsListAdmin.innerHTML = ''; 
             data.forEach(comment => {
                 const item = document.createElement('div');
                 item.className = 'comment-item-admin';
@@ -258,7 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Lida com cliques nos botões de moderar (Ocultar/Deletar)
     async function handleCommentAction(e) {
         const button = e.target;
         const id = button.dataset.id;
@@ -266,26 +253,104 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             if (button.classList.contains('toggle-visibility-btn')) {
-                // Ocultar / Re-exibir
                 const estaVisivel = button.dataset.visible === '1';
                 const novoStatus = !estaVisivel;
                 
-                const result = await fetchAdminAPI(`/comentarios/moderar/${id}`, 'PUT', { visivel: novoStatus });
+                await fetchAdminAPI(`/comentarios/moderar/${id}`, 'PUT', { visivel: novoStatus });
                 
-                // Atualiza a UI
                 button.dataset.visible = novoStatus ? '1' : '0';
                 button.textContent = novoStatus ? 'Ocultar' : 'Re-exibir';
                 button.closest('.comment-item-admin').classList.toggle('hidden-comment', !novoStatus);
 
             } else if (button.classList.contains('delete-btn')) {
-                // Deletar
                 if (confirm('Tem certeza que deseja deletar este comentário PERMANENTEMENTE?')) {
-                    const result = await fetchAdminAPI(`/comentarios/${id}`, 'DELETE');
+                    await fetchAdminAPI(`/comentarios/${id}`, 'DELETE');
                     button.closest('.comment-item-admin').remove();
                 }
             }
         } catch (error) {
             alert(`Erro: ${error.message}`);
+        }
+    }
+
+    // --- 5. LÓGICA DE IMPORTAÇÃO DE PLANILHA (RF008) ---
+
+    // Gera um template CSV vazio com os cabeçalhos corretos para download
+    function gerarTemplateCSV() {
+        const headers = [
+            "Data",
+            "Desjejum_Bebida", "Desjejum_Acompanhamento", "Desjejum_Guarnicao",
+            "Almoco_Salada", "Almoco_Proteina_1", "Almoco_Proteina_2", "Almoco_Vegetariana", "Almoco_Acompanhamento", "Almoco_Guarnicao", "Almoco_Sobremesa",
+            "Janta_Salada", "Janta_Proteina_1", "Janta_Proteina_2", "Janta_Vegetariana", "Janta_Acompanhamento", "Janta_Guarnicao", "Janta_Sopa", "Janta_Sobremesa"
+        ];
+
+        // Cria a primeira linha (cabeçalhos) e uma segunda linha vazia de exemplo
+        const csvContent = "\uFEFF" + headers.join(",") + "\n" + "DD/MM/YYYY,,,,,,,,,,,,,,,,,,";
+
+        // Cria um Blob com o conteúdo e o tipo MIME para CSV em UTF-8
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        
+        // Cria um link temporário para forçar o download
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", "Template_Cardapio_RU.csv");
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    async function handleImportarPlanilha() {
+        const fileInput = document.getElementById('filePlanilha');
+        const feedback = document.getElementById('importarFeedback');
+        const btnImportar = document.getElementById('btnImportar');
+        const file = fileInput.files[0];
+
+        if (!file) {
+            feedback.textContent = '❌ Por favor, selecione um arquivo (.xlsx ou .csv).';
+            feedback.className = 'form-message error';
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('planilha', file);
+
+        try {
+            btnImportar.disabled = true;
+            btnImportar.textContent = 'Importando...';
+            feedback.textContent = 'Processando planilha...';
+            feedback.className = 'form-message loading';
+
+            const response = await fetch('/api/admin/importar', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: formData
+            });
+
+            if (response.status === 401) {
+                handleLogout();
+                throw new Error('Sessão expirada.');
+            }
+
+            const data = await response.json();
+
+            if (response.ok) {
+                feedback.textContent = `✅ ${data.message}`;
+                feedback.className = 'form-message success';
+                fileInput.value = ''; // Limpa o input
+            } else {
+                throw new Error(data.message);
+            }
+        } catch (error) {
+            console.error('Erro na importação:', error);
+            feedback.textContent = `❌ ${error.message || 'Erro de conexão com o servidor.'}`;
+            feedback.className = 'form-message error';
+        } finally {
+            btnImportar.disabled = false;
+            btnImportar.textContent = 'Importar Dados';
         }
     }
 
@@ -303,6 +368,17 @@ document.addEventListener('DOMContentLoaded', () => {
     loadCommentsBtn.addEventListener('click', loadCommentsForModeration);
     commentsListAdmin.addEventListener('click', handleCommentAction);
 
+    // Importar Planilha
+    const btnImportarObj = document.getElementById('btnImportar');
+    if(btnImportarObj) {
+        btnImportarObj.addEventListener('click', handleImportarPlanilha);
+    }
+    
+    // Botão de Baixar Template
+    const btnBaixarTemplate = document.getElementById('btnBaixarTemplate');
+    if(btnBaixarTemplate) {
+        btnBaixarTemplate.addEventListener('click', gerarTemplateCSV);
+    }
 
     // --- INICIALIZAÇÃO ---
     checkLoginStatus();

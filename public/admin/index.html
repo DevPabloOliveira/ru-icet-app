@@ -36,6 +36,7 @@
         <nav class="dashboard-nav">
             <button class="tab-button active" data-tab="menu-manager">Gerenciar Cardápio</button>
             <button class="tab-button" data-tab="comments-moderator">Moderar Comentários</button>
+            <button class="tab-button" data-tab="importar-planilha">Importar Planilha</button>
         </nav>
 
         <div class="dashboard-content">
@@ -149,7 +150,39 @@
                     </div>
 
                     <div id="comments-list-admin">
-                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="importar-planilha" class="tab-panel">
+                <div id="importar-planilha-content">
+                    <h2>Importar Cardápio em Lote</h2>
+                    <p style="margin-bottom: 20px;">Faça o upload de uma planilha (.xlsx ou .csv) para cadastrar múltiplos dias simultaneamente. Isso poupa o trabalho de digitar dia por dia.</p>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <button id="btnBaixarTemplate" class="button" style="width: auto; background-color: #005A3C; color: white; padding: 8px 15px; font-size: 0.9em; cursor: pointer; border: none; border-radius: 4px;">
+                            Baixar Template Vazio (.CSV)
+                        </button>
+                        <span style="font-size: 0.85em; margin-left: 10px; color: #555;">(Baixe, preencha no Excel e faça o upload abaixo)</span>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="filePlanilha" style="font-weight: bold; display: block; margin-bottom: 5px;">Selecione a Planilha Preenchida:</label>
+                        <input type="file" id="filePlanilha" accept=".xlsx, .xls, .csv" style="display: block; width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    </div>
+                    
+                    <button id="btnImportar" class="button" style="width: auto; padding: 10px 20px;">Importar Dados</button>
+                    
+                    <p id="importarFeedback" class="form-message" style="margin-top: 15px; font-weight: bold;"></p>
+                    
+                    <div style="margin-top: 30px; font-size: 0.9em; background-color: #f8f9fa; padding: 15px; border-left: 4px solid var(--ufam-green);">
+                        <strong>⚠️ Regras da Planilha:</strong>
+                        <ul style="margin-top: 10px; margin-left: 20px;">
+                            <li>O arquivo deve ser salvo utilizando a codificação <strong>UTF-8</strong> para não quebrar a acentuação.</li>
+                            <li>A primeira linha (cabeçalho) não deve ser apagada nem alterada.</li>
+                            <li>A coluna da data deve seguir o formato <strong>DD/MM/YYYY</strong>.</li>
+                        </ul>
+                    </div>
                 </div>
             </section>
 
