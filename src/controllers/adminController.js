@@ -1,12 +1,12 @@
 const pool = require('../config/db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const xlsx = require('xlsx');
 
 // Carrega o segredo das variáveis de ambiente
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // VERIFICAÇÃO DE SEGURANÇA:
-// Se o segredo não estiver definido, o app não deve rodar.
 if (!JWT_SECRET) {
     throw new Error('FATAL_ERROR: JWT_SECRET não está definido nas variáveis de ambiente.');
 }
@@ -110,7 +110,7 @@ exports.getComentariosAdmin = async (req, res) => {
 exports.moderarComentario = async (req, res) => {
     try {
         const { id } = req.params;
-        const { visivel } = req.body; // Deve ser true ou false
+        const { visivel } = req.body; 
 
         if (visivel === undefined) {
             return res.status(400).json({ message: 'Status de visibilidade não fornecido.' });
@@ -138,5 +138,109 @@ exports.deleteComentario = async (req, res) => {
         res.json({ message: `Comentário ${id} deletado.` });
     } catch (error) {
         res.status(500).json({ message: 'Erro ao deletar comentário.', error: error.message });
+    }
+};
+
+/**
+ * RF008: Importar Cardápio em Lote via Planilha (XLSX/CSV)
+ */
+exports.importarPlanilha = async (req, res) => {
+    try {
+        // 1. Verifica se o arquivo foi enviado
+        if (!req.file) {
+            return res.status(400).json({ message: 'Nenhum arquivo enviado. Anexe uma planilha.' });
+        }
+
+        // 2. Lê a planilha a partir do buffer em memória
+        const workbook = xlsx.read(req.file.buffer, { 
+            type: 'buffer',
+            codepage: 65001 
+        });
+        
+        // Pega a primeira aba da planilha
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        
+        // Converte a aba em um Array de Objetos JSON. raw: false garante que datas venham como string
+        const dadosPlanilha = xlsx.utils.sheet_to_json(sheet, { defval: "" });
+
+        if (dadosPlanilha.length === 0) {
+            return res.status(400).json({ message: 'A planilha está vazia.' });
+        }
+
+        let connection;
+        let diasImportados = 0;
+
+        try {
+            connection = await pool.getConnection();
+            await connection.beginTransaction();
+
+            // 3. Itera sobre cada linha da planilha
+            for (const linha of dadosPlanilha) {
+                if (!linha.Data) continue; 
+
+                // Converte a data (ex: 25/10/2025 ou 2025-10-25) para o padrão YYYY-MM-DD do MySQL
+                let dataFormatada = linha.Data;
+                if (dataFormatada.includes('/')) {
+                    const partes = dataFormatada.split('/');
+                    if (partes.length === 3) {
+                        dataFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`; 
+                    }
+                }
+
+                // Monta os objetos JSON exatamente como o banco espera
+                const desjejum = {
+                    bebida: linha.Desjejum_Bebida || "",
+                    acompanhamento: linha.Desjejum_Acompanhamento || "",
+                    guarnicao: linha.Desjejum_Guarnicao || ""
+                };
+
+                const almoco = {
+                    salada: linha.Almoco_Salada || "",
+                    proteina_1: linha.Almoco_Proteina_1 || "",
+                    proteina_2: linha.Almoco_Proteina_2 || "",
+                    vegetariana: linha.Almoco_Vegetariana || "",
+                    acompanhamento: linha.Almoco_Acompanhamento || "",
+                    guarnicao: linha.Almoco_Guarnicao || "",
+                    sobremesa: linha.Almoco_Sobremesa || ""
+                };
+
+                const janta = {
+                    salada: linha.Janta_Salada || "",
+                    proteina_1: linha.Janta_Proteina_1 || "",
+                    proteina_2: linha.Janta_Proteina_2 || "",
+                    vegetariana: linha.Janta_Vegetariana || "",
+                    acompanhamento: linha.Janta_Acompanhamento || "",
+                    guarnicao: linha.Janta_Guarnicao || "",
+                    sopa: linha.Janta_Sopa || "",
+                    sobremesa: linha.Janta_Sobremesa || ""
+                };
+
+                // Executa o UPSERT (Insere ou Atualiza se a data já existir)
+                await connection.query(
+                    `INSERT INTO cardapios (data, desjejum, almoco, janta) 
+                     VALUES (?, ?, ?, ?)
+                     ON DUPLICATE KEY UPDATE 
+                     desjejum = VALUES(desjejum), almoco = VALUES(almoco), janta = VALUES(janta)`,
+                    [dataFormatada, JSON.stringify(desjejum), JSON.stringify(almoco), JSON.stringify(janta)]
+                );
+
+                diasImportados++;
+            }
+
+            // Confirma a transação inteira
+            await connection.commit();
+            res.status(200).json({ message: `Sucesso! ${diasImportados} dias foram importados/atualizados no cardápio.` });
+
+        } catch (dbError) {
+            if (connection) await connection.rollback();
+            throw dbError; 
+        } finally {
+            if (connection) connection.release();
+        }
+
+    } catch (error) {
+        console.error('[ERRO] Falha ao importar planilha:', error);
+        res.status(500).json({ message: 'Erro ao processar a planilha. Verifique o formato do arquivo.', error: error.message });
     }
 };
